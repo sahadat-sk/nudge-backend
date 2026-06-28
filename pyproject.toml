@@ -1,0 +1,24 @@
+[project]
+name = "nudge-backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "sahadat-sk",email = "mss.21U10442@btech.nitdgp.ac.in"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi (>=0.138.1,<0.139.0)",
+    "uvicorn (>=0.49.0,<0.50.0)",
+    "sqlalchemy (>=2.0.51,<3.0.0)",
+    "alembic (>=1.18.5,<2.0.0)",
+    "pydantic-settings (>=2.14.2,<3.0.0)",
+    "psycopg (>=3.3.4,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "nudge_backend", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
