@@ -1,4 +1,3 @@
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
@@ -11,12 +10,8 @@ engine = create_engine(
     pool_pre_ping=True,
 )
 
-# SessionLocal = sessionmaker(
-#     bind=engine,
-#     autoflush=False,
-#     autocommit=False,
-# )
-
-with engine.connect() as conn:
-    conn.execute(text("SELECT 1"))
-    print("Database connected successfully.")
+SessionLocal = sessionmaker(
+    bind=engine,
+    autoflush=False,
+    autocommit=False,
+)
