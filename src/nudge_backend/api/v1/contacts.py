@@ -14,17 +14,18 @@ router = APIRouter()
 
 @router.get("/contacts", response_model=ContactListResponse)
 def get_contacts(
-    search: str | None = None,
-    status: str | None = None,
-    sort: str = "name",
-    order: str = "asc",
-    page: int = Query(1, ge=1),
-    page_size: int = Query(25, ge=1, le=100),
+        search: str | None = None,
+        status: str | None = None,
+        sort: str = "name",
+        order: str = "asc",
+        page: int = Query(1, ge=1),
+        page_size: int = Query(25, ge=1, le=100),
         db: Session = Depends(get_db)):
+
     repository = ContactRepository(db)
     service = ContactService(repository)
 
-    return service.list()
+    return service.list(search=search, status=status, sort=sort, order=order, page=page, page_size=page_size)
 
 
 @router.post("/contacts", response_model=ContactResponse)

@@ -1,4 +1,4 @@
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from nudge_backend.models.contact import Contact
@@ -32,11 +32,12 @@ class ContactRepository:
     ):
         query = select(Contact)
 
-        if search:
-            query = query.where(
-                Contact.name.ilike(f"%{search}%")
+        query = query.where(
+            or_(
+                Contact.name.ilike(f"%{search}%"),
+                Contact.name.op("%")(search),
             )
-
+        )
         if status:
             query = query.where(
                 Contact.status == status
