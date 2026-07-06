@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -16,6 +17,7 @@ router = APIRouter()
 def get_contacts(
         search: str | None = None,
         status: str | None = None,
+        source: str | None = None,
         sort: str = "name",
         order: str = "asc",
         page: int = Query(1, ge=1),
@@ -25,7 +27,15 @@ def get_contacts(
     repository = ContactRepository(db)
     service = ContactService(repository)
 
-    return service.list(search=search, status=status, sort=sort, order=order, page=page, page_size=page_size)
+    return service.list(search=search, status=status, source=source, sort=sort, order=order, page=page, page_size=page_size)
+
+
+@router.get("/contacts/{id}", response_model=ContactResponse)
+def get_contact(id: UUID, db: Session = Depends(get_db)):
+    repository = ContactRepository(db)
+    service = ContactService(repository)
+
+    return service.get(id)
 
 
 @router.post("/contacts", response_model=ContactResponse)

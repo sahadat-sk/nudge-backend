@@ -1,5 +1,5 @@
 from nudge_backend.core.config import settings
-from nudge_backend.models.contact import Contact
+from nudge_backend.models import *
 from nudge_backend.models.base import Base
 from logging.config import fileConfig
 

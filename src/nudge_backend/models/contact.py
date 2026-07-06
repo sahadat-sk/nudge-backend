@@ -2,9 +2,10 @@ from datetime import date
 import uuid
 
 from sqlalchemy import UUID, Date, String, null
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from nudge_backend.models.base import Base
+from nudge_backend.models.contact_activity import ContactActivity
 
 
 class Contact(Base):
@@ -22,3 +23,8 @@ class Contact(Base):
     source: Mapped[str] = mapped_column(String(100), index=True)
 
     status: Mapped[str] = mapped_column(String(100), index=True)
+
+    activities: Mapped[list["ContactActivity"]] = relationship(
+        back_populates="contact",
+        cascade="all, delete-orphan",
+        order_by="ContactActivity.created_at.desc()",)

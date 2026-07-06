@@ -1,3 +1,6 @@
+from uuid import UUID
+
+from fastapi import HTTPException
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
@@ -6,6 +9,7 @@ from nudge_backend.models.contact import Contact
 SORT_FIELDS = {
     "name": Contact.name,
     "status": Contact.status,
+    "source": Contact.source,
     "next_followup": Contact.next_followup,
     "last_contacted": Contact.last_contacted,
 }
@@ -21,26 +25,36 @@ class ContactRepository:
         self.db.refresh(contact)
         return contact
 
+    def get(self, id: UUID):
+        contact = self.db.get(Contact, id)
+        return contact
+
     def list(
         self,
         search: str | None,
         status: str | None,
-        sort: str,
+        source: str | None, sort: str,
         order: str,
         page: int,
         page_size: int,
     ):
         query = select(Contact)
 
-        query = query.where(
-            or_(
-                Contact.name.ilike(f"%{search}%"),
-                Contact.name.op("%")(search),
+        if search:
+            query = query.where(
+                or_(
+                    Contact.name.ilike(f"%{search}%"),
+                    Contact.name.op("%")(search),
+                )
             )
-        )
         if status:
             query = query.where(
                 Contact.status == status
+            )
+
+        if source:
+            query = query.where(
+                Contact.source == source
             )
 
         count_query = select(

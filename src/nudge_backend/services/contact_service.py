@@ -1,4 +1,5 @@
 import math
+from uuid import UUID
 
 from nudge_backend.models.contact import Contact
 from nudge_backend.schemas.contact import ContactCreate
@@ -12,10 +13,14 @@ class ContactService:
         contact = Contact(**data.model_dump())
         return self.repository.create(contact)
 
+    def get(self, id: UUID):
+        return self.repository.get(id)
+
     def list(
         self,
         search: str | None,
         status: str | None,
+        source: str | None,
         sort: str,
         order: str,
         page: int,
@@ -25,6 +30,7 @@ class ContactService:
         items, total = self.repository.list(
             search,
             status,
+            source,
             sort,
             order,
             page,
