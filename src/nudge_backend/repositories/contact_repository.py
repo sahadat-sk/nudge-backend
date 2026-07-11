@@ -29,6 +29,31 @@ class ContactRepository:
         contact = self.db.get(Contact, id)
         return contact
 
+    def update(
+        self,
+        contact_id: UUID,
+        data: dict,
+    ) -> Contact | None:
+        stmt = (
+            select(Contact)
+            .where(
+                Contact.id == contact_id,
+            )
+        )
+
+        contact = self.db.scalar(stmt)
+
+        if contact is None:
+            return None
+
+        for key, value in data.items():
+            setattr(contact, key, value)
+
+        self.db.commit()
+        self.db.refresh(contact)
+
+        return contact
+
     def list(
         self,
         search: str | None,

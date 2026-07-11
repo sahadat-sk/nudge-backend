@@ -12,6 +12,14 @@ class ContactCreate(BaseModel):
     status: str
 
 
+class ContactUpdate(BaseModel):
+    name: str | None = None
+    last_contacted: date | None = None
+    next_followup: date | None = None
+    source: str | None = None
+    status: str | None = None
+
+
 class ContactResponse(BaseModel):
     id: UUID
     name: str

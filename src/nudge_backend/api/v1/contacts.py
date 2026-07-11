@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from nudge_backend.dependencies.database import get_db
 from nudge_backend.repositories.contact_repository import ContactRepository
-from nudge_backend.schemas.contact import ContactCreate, ContactListResponse, ContactResponse
+from nudge_backend.schemas.contact import ContactCreate, ContactListResponse, ContactResponse, ContactUpdate
 from nudge_backend.services.contact_service import ContactService
 
 
@@ -36,6 +36,25 @@ def get_contact(id: UUID, db: Session = Depends(get_db)):
     service = ContactService(repository)
 
     return service.get(id)
+
+
+@router.patch(
+    "/contacts/{contact_id}",
+    response_model=ContactResponse,
+)
+def update_activity(
+    contact_id: UUID,
+    body: ContactUpdate,
+    db: Session = Depends(get_db),
+):
+
+    repository = ContactRepository(db)
+    service = ContactService(repository)
+
+    return service.update(
+        contact_id,
+        body,
+    )
 
 
 @router.post("/contacts", response_model=ContactResponse)
