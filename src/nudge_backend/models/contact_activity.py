@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 from sqlalchemy import UUID, DateTime, ForeignKey, String, Text
@@ -48,7 +48,7 @@ class ContactActivity(Base):
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        default=datetime.now(),
+        default=lambda: datetime.now(timezone.utc),
         index=True,
     )
 

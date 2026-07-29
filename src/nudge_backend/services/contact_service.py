@@ -11,8 +11,8 @@ class ContactService:
     def __init__(self, repository):
         self.repository = repository
 
-    def create(self, data: ContactCreate):
-        contact = Contact(**data.model_dump())
+    def create(self, owner_id: str, data: ContactCreate):
+        contact = Contact(owner_id=owner_id, **data.model_dump())
         return self.repository.create(contact)
 
     def update(

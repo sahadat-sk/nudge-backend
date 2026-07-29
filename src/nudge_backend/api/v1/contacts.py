@@ -4,6 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from nudge_backend.auth.dependencies import CurrentUser
 from nudge_backend.dependencies.database import get_db
 from nudge_backend.repositories.contact_repository import ContactRepository
 from nudge_backend.schemas.contact import ContactCreate, ContactListResponse, ContactResponse, ContactUpdate
@@ -58,8 +59,8 @@ def update_activity(
 
 
 @router.post("/contacts", response_model=ContactResponse)
-def create_contact(payload: ContactCreate, db: Session = Depends(get_db)):
+def create_contact(payload: ContactCreate, current_user: CurrentUser, db: Session = Depends(get_db)):
     repository = ContactRepository(db)
     service = ContactService(repository)
 
-    return service.create(payload)
+    return service.create(current_user.id, payload)
