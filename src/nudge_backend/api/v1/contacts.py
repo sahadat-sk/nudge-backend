@@ -4,14 +4,14 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from nudge_backend.auth.dependencies import CurrentUser
+from nudge_backend.auth.dependencies import CurrentUser, get_current_user
 from nudge_backend.dependencies.database import get_db
 from nudge_backend.repositories.contact_repository import ContactRepository
 from nudge_backend.schemas.contact import ContactCreate, ContactListResponse, ContactResponse, ContactUpdate
 from nudge_backend.services.contact_service import ContactService
 
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.get("/contacts", response_model=ContactListResponse)
