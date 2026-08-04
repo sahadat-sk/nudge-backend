@@ -103,6 +103,34 @@ class AuthService:
             self._db.commit()
 
     # ----------------------------------------------------------------
+    # Identify a user from their session cookie without rotating it.
+    #
+    # Used by flows that are full-page browser navigations rather than
+    # XHR calls — e.g. GET /calendar/connect — where there's no
+    # opportunity to attach an Authorization header, but the refresh
+    # cookie is sent automatically because the request is same-origin
+    # with the backend.
+    # ----------------------------------------------------------------
+    def get_user_from_refresh_token(self, raw_refresh_token: str) -> User:
+        try:
+            selector, _ = split_refresh_token(raw_refresh_token)
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail="Invalid refresh token") from exc
+
+        record = self._refresh_tokens.get_by_selector(selector)
+        if record is None or not record.is_valid or not verify_refresh_token(raw_refresh_token, record.verifier_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+
+        user = self._users.get_by_id(record.user_id)
+        if user is None or not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Account no longer active")
+
+        return user
+
+    # ----------------------------------------------------------------
     # Internals
     # ----------------------------------------------------------------
     def _issue_tokens(self, user: User) -> tuple[str, str]:

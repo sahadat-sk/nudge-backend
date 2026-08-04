@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from nudge_backend.api.v1.contacts import router as contacts_router
 from nudge_backend.api.v1.contact_activity import router as contact_activity_router
 from nudge_backend.api.v1.auth import router as auth_router
+from nudge_backend.api.v1.calendar import router as calendar_router
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -28,3 +29,4 @@ app.add_middleware(
 app.include_router(router=contacts_router, prefix="/api/v1")
 app.include_router(router=contact_activity_router, prefix="/api/v1")
 app.include_router(router=auth_router, prefix="/api/v1")
+app.include_router(router=calendar_router, prefix="/api/v1")
