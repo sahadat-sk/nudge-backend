@@ -19,8 +19,9 @@ def get_contacts(
         search: str | None = None,
         status: str | None = None,
         source: str | None = None,
-        sort: str = "name",
-        order: str = "asc",
+        due: str | None = None,
+        sort: str = "next_followup",
+        order: str = "desc",
         page: int = Query(1, ge=1),
         page_size: int = Query(25, ge=1, le=100),
         db: Session = Depends(get_db)):
@@ -28,7 +29,7 @@ def get_contacts(
     repository = ContactRepository(db)
     service = ContactService(repository)
 
-    return service.list(search=search, status=status, source=source, sort=sort, order=order, page=page, page_size=page_size)
+    return service.list(search=search, status=status, source=source, due=due, sort=sort, order=order, page=page, page_size=page_size)
 
 
 @router.get("/contacts/{id}", response_model=ContactResponse)
