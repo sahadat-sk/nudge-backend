@@ -10,6 +10,7 @@ class ContactCreate(BaseModel):
     next_followup: date
     source: str
     status: str
+    contact_details: str
 
 
 class ContactUpdate(BaseModel):
@@ -27,6 +28,7 @@ class ContactResponse(BaseModel):
     next_followup: date
     source: str
     status: str
+    contact_details: str
 
     model_config = {
         "from_attributes": True

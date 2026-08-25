@@ -31,6 +31,8 @@ class Contact(Base):
 
     status: Mapped[str] = mapped_column(String(100), index=True)
 
+    contact_details: Mapped[str] = mapped_column(String(), nullable=True)
+
     activities: Mapped[list["ContactActivity"]] = relationship(
         back_populates="contact",
         cascade="all, delete-orphan",

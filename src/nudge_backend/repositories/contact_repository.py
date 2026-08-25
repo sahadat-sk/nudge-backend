@@ -36,6 +36,7 @@ def _due_filter_overdue(now: datetime) -> ColumnElement:
     today = now.date()
 
     return and_(
+        Contact.status.not_in(["Won", "Lost"]),
         Contact.next_followup.is_not(None),
         Contact.next_followup < today,
     )
@@ -45,6 +46,8 @@ def _due_filter_due_today(now: datetime) -> ColumnElement:
     today = now.date()
 
     return and_(
+
+        Contact.status.not_in(["Won", "Lost"]),
         Contact.next_followup.is_not(None),
         Contact.next_followup == today,
     )
@@ -55,6 +58,8 @@ def _due_filter_due_this_week(now: datetime) -> ColumnElement:
     end_of_window = today + timedelta(days=7)
 
     return and_(
+
+        Contact.status.not_in(["Won", "Lost"]),
         Contact.next_followup.is_not(None),
         Contact.next_followup >= today,
         Contact.next_followup < end_of_window,
