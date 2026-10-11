@@ -65,7 +65,7 @@ async def google_callback(
         value=login.refresh_token,
         httponly=True,
         secure=settings.environment == "production",
-        samesite="lax",
+        samesite="none",
         max_age=60 * 60 * 24 * 30,
         path="/",
     )
